@@ -1,7 +1,7 @@
 Pass the Butter
 =
 
-Pass the butter robot van Rick and Morty voor Project Robotica.
+Pass the butter robot van Rick & Morty voor Project Robotica.
 
 Collaborators
 =
