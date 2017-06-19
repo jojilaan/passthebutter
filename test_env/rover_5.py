@@ -1,18 +1,73 @@
 # import libraries
 import RPi.GPIO as GPIO
 import time
+class Rover(object):
+		
+		def __init__(self, speed):
+				self.speed = speed
+				
+				GPIO.setmode(GPIO.BCM)
+				GPIO.setup(9, GPIO.OUT)					#Pwm LEFT        
+				GPIO.setup(11, GPIO.OUT)				#Dir LEFT
+				self.pwm_L = GPIO.PWM(9, 100)
 
-GPIO.setmode(GPIO.BCM)
+				GPIO.setup(25, GPIO.OUT)				#Pwm Right        
+				GPIO.setup(8, GPIO.OUT)					#Dir Right
+				self.pwm_R = GPIO.PWM(25, 100)
+				
+				self.pwm_L.start(0)
+				self.pwm_R.start(0)
 
-GPIO.setup(16, GPIO.OUT)        # pin 16 for PWM
-GPIO.setup(20, GPIO.OUT)        # pin 20 for Direction
-GPIO.output(20, GPIO.HIGH)      # or GPIO.LOW
-pwm = GPIO.PWM(16, 100)
-pwm.start(1)                    # Duty Cycle of 1
+		def goForward(self, speed):
+				self.speed = speed
+				GPIO.output(11, GPIO.HIGH)
+				GPIO.output(8, GPIO.LOW)
+				self.pwm_L.ChangeDutyCycle(self.speed)
+				self.pwm_R.ChangeDutyCycle(self.speed)
 
-for i in range(0, 100):         # Loop for 10 seconds
-    pwm.ChangeDutyCycle(100)    # Make the Rover Motors go full speed
-    time.sleep(.1)
+		def goBackward(self, speed):
+				self.speed = speed
+				GPIO.output(11, GPIO.LOW)
+				GPIO.output(8, GPIO.HIGH)
+				self.pwm_L.ChangeDutyCycle(self.speed)
+				self.pwm_R.ChangeDutyCycle(self.speed)
 
-pwm.stop()
-pwm.cleanup()
+		def stopRover(self):
+				self.speed = 0
+				self.pwm_L.ChangeDutyCycle(0)
+				self.pwm_R.ChangeDutyCycle(0)
+		
+		def goRight(self, speed):
+				self.speed = speed
+				GPIO.output(11, GPIO.HIGH)
+				GPIO.output(8, GPIO.HIGH)
+				self.pwm_L.ChangeDutyCycle(self.speed)
+				self.pwm_R.ChangeDutyCycle(self.speed)
+
+		def goLeft(self, speed):
+				self.speed = speed
+				GPIO.output(11, GPIO.LOW)
+				GPIO.output(8, GPIO.LOW)
+				self.pwm_L.ChangeDutyCycle(self.speed)
+				self.pwm_R.ChangeDutyCycle(self.speed)
+
+		def cleanUp(self):
+				GPIO.cleanup(9)
+				GPIO.cleanup(11)
+				GPIO.cleanup(25)
+				GPIO.cleanup(8)
+
+'''
+if __name__ == '__main__':
+		rover = Rover(0)
+		rover.goLeft(100)
+		print("Going forward with 100% speed for 10 secs")
+		time.sleep(10)
+		rover.stopRover()
+		print("Stopping rover for 1 sec")
+		time.sleep(1)
+		rover.goRight(100)
+		time.sleep(10)
+		rover.stopRover()
+		rover.cleanUp()
+'''

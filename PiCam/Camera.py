@@ -7,9 +7,10 @@ import sys
 #initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.vflip = True
-camera.resolution = (320,240)
-camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(320,240))
+camera.resolution = (320, 240)
+camera.framerate = 20
+camera.brightness = 60
+rawCapture = PiRGBArray(camera, size=(320, 240))
 
 cascPath = sys.argv[1]
 faceCascade = cv2.CascadeClassifier(cascPath)
@@ -23,7 +24,7 @@ for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port 
 	image = frame.array
 	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 	#Start function for detecting object
-	
+
 	faces = faceCascade.detectMultiScale(
 					image,
 					scaleFactor=1.1,
